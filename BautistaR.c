@@ -4,18 +4,17 @@
 typedef char String50 [51];
  /* displayMainMenu displays the main menu with a user-friendly (text based interface)
  @returns the players choice among M, P, or E
- 
  */
-void displayMainMenu()
+char displayMainMenu()
 {
     char cChoice;
-    printf("Please Choose a Mode\n [M]anage Data\n [P]lay\n [E]xit\n");
+    printf("Please choose a mode:\n [M]anage Data\n [P]lay\n [E]xit\n");
     scanf("%c", &cChoice);
     do
     {
         if (cChoice != 'M' && cChoice != 'P' && cChoice != 'E')
         {
-            printf("Invalid Input!\n");
+            printf("Invalid input!\n");
         }
     } while (cChoice != 'M' && cChoice != 'P' && cChoice != 'E');
     return cChoice;
@@ -40,16 +39,20 @@ validPassword(String50 Password){
 
 
 
-int main(){
-    String50 sMode;
+int main()
+{
+    char cMode;
+    while(cMode != 'E')
+    {
+        cMode = displayMainMenu();
+        if (cMode == 'M')
+        {
 
+        }
+        if (cMode == 'P')
+        {
 
-
-
-
-
-
-
-
+        }
+    }
     return 0;
 }
