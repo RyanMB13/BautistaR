@@ -14,7 +14,7 @@ struct questionRecord
     String30 choice2; 
     String30 choice3;
     String30 answer;
-}
+};
 
 
  /* displayMainMenu displays the main menu with a user-friendly text based interface.
