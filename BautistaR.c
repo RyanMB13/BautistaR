@@ -1,9 +1,23 @@
 #include <stdio.h>
 #include <string.h>
 
-typedef char String50 [51];
+typedef char String20 [21];
+typedef char String30 [31];
+typedef char String150 [151];
 
- /* displayMainMenu displays the main menu with a user-friendly (text based interface)
+struct questionRecord
+{
+    String20 topic;
+    int number;
+    String150 question;
+    String30 choice1;
+    String30 choice2; 
+    String30 choice3;
+    String30 answer;
+}
+
+
+ /* displayMainMenu displays the main menu with a user-friendly text based interface.
  @returns the players choice among M, P, or E
  */
 
@@ -24,7 +38,7 @@ char displayMainMenu()
 }
 
 
- /* displayMainMenu displays the main menu with a user-friendly (text based interface)
+ /* displayMainMenu displays the player menu with a user-friendly text based interface.
  @returns the players choice among P, V, or E
  */
 
@@ -65,7 +79,7 @@ validPassword(String50 Password){
 
 int main()
 {
-    char cMode, cPlayMode;
+    char cMode, cPlayMode, cAdminMode;
     while(cMode != 'E')
     {
         cMode = displayMainMenu();
