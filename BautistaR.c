@@ -16,15 +16,26 @@ struct questionRecord
     String30 answer;
 };
 
+/*
+displayIntro displays the introductory message for the player to know what they are playing.
+*/
 
- /* displayMainMenu displays the main menu with a user-friendly text based interface.
+void displayIntro()
+{
+    printf("Welcome to Quizlet!\n");
+    printf("A two player general knowledge quiz game.\n");
+}
+
+
+ /* 
+ displayMainMenu displays the main menu with a user-friendly text based interface.
  @returns the players choice among M, P, or E
  */
 
 char displayMainMenu()
 {
     char cChoice;
-    printf("This is the Main Menu. Please choose a mode:\n [M]anage Data as an admin\n [P]lay the game as a player\n [E]xit the program\n");
+    printf("You are now viewing the Main Menu. Please choose a mode:\n[M]anage Data as an admin\n[P]lay the game as a player\n[E]xit the program\n");
     do
     {
         printf("Enter your choice: \n");
@@ -38,14 +49,15 @@ char displayMainMenu()
 }
 
 
- /* displayMainMenu displays the player menu with a user-friendly text based interface.
+ /* 
+ displayMainMenu displays the player menu with a user-friendly text based interface.
  @returns the players choice among P, V, or E
  */
 
 char displayPlayMenu()
 {
     char cChoice;
-    printf("This is the Play Menu. Please choose a mode:\n [P]lay\n [V]iew Scores\n [E]xit\n");
+    printf("You are now viewing the Play Menu. Please choose a mode:\n[P]lay\n[V]iew Scores\n[E]xit\n");
     do
     {
         printf("Enter your choice: \n");
@@ -61,6 +73,7 @@ char displayPlayMenu()
 int main()
 {
     char cMode, cPlayMode, cAdminMode;
+    displayIntro();
     while(cMode != 'E')
     {
         cMode = displayMainMenu();
