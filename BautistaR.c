@@ -89,6 +89,10 @@ char displayAdminMenu()
     return cChoice;
 }
 
+/* 
+ displayPasswordMenu displays the password menu with a user-friendly text based interface.
+ @returns the players choice among T or B.
+ */
 
 char displayPasswordMenu()
 {
@@ -98,11 +102,11 @@ char displayPasswordMenu()
     {
         printf("Enter your choice: \n");
         scanf(" %c", &cChoice);
-        if (cChoice != 'T' && cChoice != 'E')
+        if (cChoice != 'T' && cChoice != 'B')
         {
             printf("Invalid input!\n");
         }
-    }   while (cChoice != 'T' && cChoice != 'E');
+    }   while (cChoice != 'T' && cChoice != 'B');
     return cChoice;
 }
 
@@ -113,7 +117,7 @@ int main()
     int bPassword = 0;
     int bMatchingPassword;
     char ch;
-    String30 sAdminPassword, sInputPassword;
+    String30 sAdminPassword, sInputPassword, sInputPassword2;
     char cMode, cPlayMode, cAdminMode, cPasswordMode;
     displayIntro();
     while (cMode != 'E')
@@ -138,7 +142,6 @@ int main()
                 }
                 if (bPassword == 1)
                 {
-                
                     printf("Please enter the admin password: \n");
                     while((ch = _getch()) != 13)
                     {
@@ -148,19 +151,13 @@ int main()
                     }
                     sInputPassword[j] = '\0';
                     bMatchingPassword = strcmp(sAdminPassword, sInputPassword);
-                    if( bMatchingPassword != 0)
+                    if(bMatchingPassword != 0)
                     {
-                        cPasswordMode = displayPasswordMenu();
-                        if (cPasswordMode == 'T')
-                        {
-
-                        }
-
+                        // code to check again or return to main menu
                     }
-                    
                     if (bMatchingPassword == 0)
                     {
-                        printf("You have entered the correct password.\n");
+                        printf("\nYou have entered the correct password.\n");
                         cAdminMode = displayAdminMenu();
                         if (cAdminMode == 'A')
                         {
@@ -184,7 +181,7 @@ int main()
                         }
                     }
                 }
-           } while (cAdminMode != 'B');
+            } while (cAdminMode != 'B');
         }
         if (cMode == 'P')
         {
