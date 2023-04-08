@@ -24,7 +24,7 @@ struct questionRecord
 char displayMainMenu()
 {
     char cChoice;
-    printf("Please choose a mode:\n [M]anage Data as an admin\n [P]lay the game as a player\n [E]xit the program\n");
+    printf("This is the Main Menu. Please choose a mode:\n [M]anage Data as an admin\n [P]lay the game as a player\n [E]xit the program\n");
     do
     {
         printf("Enter your choice: \n");
@@ -45,7 +45,7 @@ char displayMainMenu()
 char displayPlayMenu()
 {
     char cChoice;
-    printf("Please choose a mode:\n [P]lay\n [V]iew Scores\n [E]xit\n");
+    printf("This is the Play Menu. Please choose a mode:\n [P]lay\n [V]iew Scores\n [E]xit\n");
     do
     {
         printf("Enter your choice: \n");
@@ -57,25 +57,6 @@ char displayPlayMenu()
     } while (cChoice != 'P' && cChoice != 'V' && cChoice != 'E');
     return cChoice;
 }
-
-/*
-int 
-validPassword(String50 Password){
-    
-    char userInput;
-    if (strlen(Password) == strlen(userInput) && strcmp(Password, userInput) == 0)
-    {
-
-        return 1;
-    }
-    else
-    {
-        return 0;
-    }
-} 
-*/
-
-
 
 int main()
 {
