@@ -1,6 +1,16 @@
+/*********************************************************************************************************
+This is to certify that this project is my own work, based on my personal efforts in studying and applying the concepts
+learned. I have constructed the functions and their respective algorithms and corresponding code by myself. The
+program was run, tested, and debugged by my own efforts. I further certify that I have not copied in part or whole or
+otherwise plagiarized the work of other students and/or persons.
+Ryan Matthew Mabanag Bautista, DLSU ID# 12113972
+*********************************************************************************************************/
+
 #include <stdio.h>
 #include <string.h>
 #include <conio.h>
+
+#define SIZE 30
 
 typedef char String20 [21];
 typedef char String30 [31];
@@ -15,7 +25,6 @@ struct questionRecord
     String30 choice3;
     String30 answer;
 };
-
 struct playerRecord
 {
     String20 name;
@@ -33,10 +42,10 @@ void displayIntro()
     printf("A two player general knowledge quiz game!\n");
 }
 
- /* 
- displayMainMenu displays the main menu with a user-friendly text based interface.
- @returns the players choice among M, P, or E.
- */
+/* 
+displayMainMenu displays the main menu with a user-friendly text based interface.
+@returns the players choice among M, P, or E.
+*/
 
 char displayMainMenu()
 {
@@ -54,10 +63,10 @@ char displayMainMenu()
     return cChoice;
 }
 
- /* 
- displayMainMenu displays the player menu with a user-friendly text based interface.
- @returns the players choice among P, V, or E.
- */
+/* 
+displayMainMenu displays the player menu with a user-friendly text based interface.
+@returns the players choice among P, V, or E.
+*/
 
 char displayPlayMenu()
 {
@@ -76,9 +85,9 @@ char displayPlayMenu()
 }
 
 /* 
- displayMainMenu displays the player menu with a user-friendly text based interface.
- @returns the players choice among A, C, D, I, E, B.
- */
+displayMainMenu displays the player menu with a user-friendly text based interface.
+@returns the players choice among A, C, D, I, E, B.
+*/
 
 char displayAdminMenu()
 {
@@ -97,9 +106,9 @@ char displayAdminMenu()
 }
 
 /* 
- displayPasswordMenu displays the password menu with a user-friendly text based interface.
- @returns the players choice among 1 or 0.
- */
+displayPasswordMenu displays the password menu with a user-friendly text based interface.
+@returns the players choice among 1 or 0.
+*/
 
 char displayPasswordMenu()
 {
@@ -117,6 +126,58 @@ char displayPasswordMenu()
     return cChoice;
 }
 
+/*
+addRecord allows the user to add a record if their question and answer input are unique. If the input is already present, the function indicates it.
+@param questionRecord *A the array of structures that stores the information about the questions.
+@param n the maximum number of array elements
+*/
+void addRecord(struct questionRecord *A, int n)
+{
+    int i;
+    int bQuestionAlreadyPresent;
+    int bAnswerAlreadyPresent;
+    String150 sQuestion;
+    String30 sAnswer;
+    String20 sTopic;
+    String30 sChoice1;
+    String30 sChoice2;
+    String30 sChoice3;
+    printf("Please input a question: \n");
+    scanf(" %[^\n]", &sQuestion);
+    printf("Please input an answer: \n");
+    scanf(" %[^\n]", &sAnswer);
+    for (i = 0; i < n; i++)
+    {
+        bQuestionAlreadyPresent = strcmp(sQuestion, (A+i)->question);
+        bQuestionAlreadyPresent = strcmp(sAnswer, (A+i)->answer);
+    }
+    if (bQuestionAlreadyPresent == 0 && bAnswerAlreadyPresent == 0)
+    {
+        printf("The question and answer are already listed in the records.\n");
+        printf("Topic: %s\n", (A+i)->topic);
+        printf("Question Number: %d\n", (A+i)->number);
+        printf("Question: %s\n", (A+i)->question);
+        printf("Choice 1: %s\n", (A+i)->choice1);
+        printf("Choice 2: %s\n", (A+i)->choice2);
+        printf("Choice 3: %s\n", (A+i)->choice3);
+        printf("Answer: %s\n", (A+i)->answer);
+    }
+    if (bQuestionAlreadyPresent != 0 && bAnswerAlreadyPresent != 0)
+    {
+        printf("Question: %s", sQuestion);
+        printf("Answer: %s", sAnswer);
+        printf("Please input a topic: \n");
+        scanf(" %[^\n]", &sTopic);
+        printf("Please input choice 1: \n");
+        scanf(" %[^\n]", &sChoice1);
+        printf("Please input choice 2: \n");
+        scanf(" %[^\n]", &sChoice2);
+        printf("Please input choice 3: \n");
+        scanf(" %[^\n]", &sChoice3);
+    }
+
+}
+
 int main()
 {
     int i = 0;
@@ -127,6 +188,7 @@ int main()
     char ch;
     String30 sAdminPassword, sInputPassword;
     char cMode, cPlayMode, cAdminMode, cPasswordMode;
+    struct questionRecord questionItems[SIZE];
     displayIntro();
     while (cMode != 'E')
     {
