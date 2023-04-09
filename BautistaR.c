@@ -16,6 +16,13 @@ struct questionRecord
     String30 answer;
 };
 
+struct playerRecord
+{
+    String20 name;
+    int score;
+    char ch;
+}
+
 /*
 displayIntro displays the introductory message for the player to know what they are playing.
 */
@@ -114,12 +121,11 @@ int main()
 {
     int i = 0;
     int j = 0;
-    int l = 0;
     int bPassword = 0;
     int bAskPassword = 1;
-    int bMatchingPassword, bMatchingPassword2;
+    int bMatchingPassword;
     char ch;
-    String30 sAdminPassword, sInputPassword, sInputPassword2;
+    String30 sAdminPassword, sInputPassword;
     char cMode, cPlayMode, cAdminMode, cPasswordMode;
     displayIntro();
     while (cMode != 'E')
