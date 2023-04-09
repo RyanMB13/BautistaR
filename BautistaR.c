@@ -97,16 +97,16 @@ char displayAdminMenu()
 char displayPasswordMenu()
 {
     char cChoice;
-    printf("You have entered the wrong password. Please choose between:\n[T]ry again\n[B]ack to main menu\n");
+    printf("\nYou have entered the wrong password. Please choose between:\n[1]Try again\n[0]Back to main menu\n");
     do
     {
         printf("Enter your choice: \n");
         scanf(" %c", &cChoice);
-        if (cChoice != 'T' && cChoice != 'B')
+        if (cChoice != '1' && cChoice != '0')
         {
             printf("Invalid input!\n");
         }
-    }   while (cChoice != 'T' && cChoice != 'B');
+    }   while (cChoice != '1' && cChoice != '0');
     return cChoice;
 }
 
@@ -114,8 +114,10 @@ int main()
 {
     int i = 0;
     int j = 0;
+    int l = 0;
     int bPassword = 0;
-    int bMatchingPassword;
+    int bAskPassword = 1;
+    int bMatchingPassword, bMatchingPassword2;
     char ch;
     String30 sAdminPassword, sInputPassword, sInputPassword2;
     char cMode, cPlayMode, cAdminMode, cPasswordMode;
@@ -123,41 +125,50 @@ int main()
     while (cMode != 'E')
     {
         cMode = displayMainMenu();
+        cPasswordMode = 'A';
+        bAskPassword = 1;
         if (cMode == 'M')
         {
-           do 
-           {
-                if (bPassword == 0)
+            if (bPassword == 0)
+            {
+                printf("Please enter a password: \n");
+                while((ch = _getch()) != 13)
                 {
-                    printf("Please enter a password: \n");
-                    while((ch = _getch()) != 13)
-                    {
-                        sAdminPassword[i] = ch;
-                        i++;
-                        printf("*");
-                    }
-                    sAdminPassword[i] = '\0';
-                    printf("\nYou have successfully set an admin password!\n");
-                    bPassword = 1;
+                    sAdminPassword[i] = ch;
+                    i++;
+                    printf("*");
                 }
-                if (bPassword == 1)
+                sAdminPassword[i] = '\0';
+                printf("\nYou have successfully set an admin password!\n");
+                bPassword = 1;
+            }
+            if (bPassword == 1 && bAskPassword == 1)
+            {
+                printf("Please enter the admin password: \n");
+                while((ch = _getch()) != 13)
                 {
-                    printf("Please enter the admin password: \n");
-                    while((ch = _getch()) != 13)
+                    sInputPassword[j] = ch;
+                    j++;
+                    printf("*");
+                }
+                sInputPassword[j] = '\0';
+                bMatchingPassword = strcmp(sAdminPassword, sInputPassword);
+                j = 0; // input password reset
+                sInputPassword[0] = '\0'; // input password reset
+                if(bMatchingPassword != 0)
+                {
+                    cPasswordMode = displayPasswordMenu();
+                    if (cPasswordMode == '1')
                     {
-                        sInputPassword[j] = ch;
-                        j++;
-                        printf("*");
+                        bAskPassword = 1;
                     }
-                    sInputPassword[j] = '\0';
-                    bMatchingPassword = strcmp(sAdminPassword, sInputPassword);
-                    if(bMatchingPassword != 0)
+                }
+                if (bMatchingPassword == 0)
+                {
+                    printf("\nYou have entered the correct password.\n");
+                    do
                     {
-                        // code to check again or return to main menu
-                    }
-                    if (bMatchingPassword == 0)
-                    {
-                        printf("\nYou have entered the correct password.\n");
+                        bAskPassword = 0;
                         cAdminMode = displayAdminMenu();
                         if (cAdminMode == 'A')
                         {
@@ -179,9 +190,9 @@ int main()
                         {
                             printf("You chose Export data!\n");
                         }
+                        } while (cAdminMode != 'B');
                     }
                 }
-            } while (cAdminMode != 'B');
         }
         if (cMode == 'P')
         {
