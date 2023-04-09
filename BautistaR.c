@@ -30,7 +30,7 @@ struct playerRecord
     String20 name;
     int score;
     char ch;
-}
+};
 
 /*
 displayIntro displays the introductory message for the player to know what they are playing.
@@ -134,26 +134,23 @@ addRecord allows the user to add a record if their question and answer input are
 void addRecord(struct questionRecord *A, int n)
 {
     int i;
+    int nNumber = 0;
     int bQuestionAlreadyPresent;
     int bAnswerAlreadyPresent;
-    String150 sQuestion;
-    String30 sAnswer;
     String20 sTopic;
-    String30 sChoice1;
-    String30 sChoice2;
-    String30 sChoice3;
+    String30 sAnswer, sChoice1, sChoice2, sChoice3;
+    String150 sQuestion;
     printf("Please input a question: \n");
-    scanf(" %[^\n]", &sQuestion);
+    scanf(" %[^\n]s", sQuestion);
     printf("Please input an answer: \n");
-    scanf(" %[^\n]", &sAnswer);
+    scanf(" %[^\n]s", sAnswer);
     for (i = 0; i < n; i++)
     {
         bQuestionAlreadyPresent = strcmp(sQuestion, (A+i)->question);
-        bQuestionAlreadyPresent = strcmp(sAnswer, (A+i)->answer);
+        bAnswerAlreadyPresent = strcmp(sAnswer, (A+i)->answer);
     }
     if (bQuestionAlreadyPresent == 0 && bAnswerAlreadyPresent == 0)
     {
-        printf("The question and answer are already listed in the records.\n");
         printf("Topic: %s\n", (A+i)->topic);
         printf("Question Number: %d\n", (A+i)->number);
         printf("Question: %s\n", (A+i)->question);
@@ -161,21 +158,43 @@ void addRecord(struct questionRecord *A, int n)
         printf("Choice 2: %s\n", (A+i)->choice2);
         printf("Choice 3: %s\n", (A+i)->choice3);
         printf("Answer: %s\n", (A+i)->answer);
+        printf("The question and answer are already listed in the records.\n");
     }
     if (bQuestionAlreadyPresent != 0 && bAnswerAlreadyPresent != 0)
     {
-        printf("Question: %s", sQuestion);
-        printf("Answer: %s", sAnswer);
+        printf("Question: %s\n", sQuestion);
+        printf("Answer: %s\n", sAnswer);
         printf("Please input a topic: \n");
-        scanf(" %[^\n]", &sTopic);
+        scanf(" %[^\n]s", sTopic);
         printf("Please input choice 1: \n");
-        scanf(" %[^\n]", &sChoice1);
+        scanf(" %[^\n]s", sChoice1);;
         printf("Please input choice 2: \n");
-        scanf(" %[^\n]", &sChoice2);
+        scanf(" %[^\n]s", sChoice2);;
         printf("Please input choice 3: \n");
-        scanf(" %[^\n]", &sChoice3);
-    }
+        scanf(" %[^\n]s", sChoice3);
+        for (i = 0; i < n; i++)
+        {
+            if(strcmp(sTopic, (A+i)->topic) == 0)
+            {
+                nNumber += 1;
+            }
+        }
+        for (i = 0; i < n; i++)
+        {
+            if ((A+i)->number == '\0' )
+            {
+                strcpy((A+i)->topic, sTopic);
+                (A+i)->number = nNumber;
+                strcpy((A+i)->question, sQuestion);
+                strcpy((A+i)->choice1, sChoice1);
+                strcpy((A+i)->choice2, sChoice2);
+                strcpy((A+i)->choice3, sChoice3);
+                strcpy((A+i)->answer, sAnswer);
+            }
 
+        }
+    }
+    
 }
 
 int main()
@@ -248,6 +267,7 @@ int main()
                         if (cAdminMode == 'A')
                         {
                             printf("You chose Add a record!\n");
+                            addRecord(questionItems, SIZE);
                         }
                         if (cAdminMode == 'C')
                         {
