@@ -91,7 +91,7 @@ char displayAdminMenu()
 
 /* 
  displayPasswordMenu displays the password menu with a user-friendly text based interface.
- @returns the players choice among T or B.
+ @returns the players choice among 1 or 0.
  */
 
 char displayPasswordMenu()
@@ -125,7 +125,6 @@ int main()
     while (cMode != 'E')
     {
         cMode = displayMainMenu();
-        cPasswordMode = 'A';
         bAskPassword = 1;
         if (cMode == 'M')
         {
@@ -144,25 +143,33 @@ int main()
             }
             if (bPassword == 1 && bAskPassword == 1)
             {
-                printf("Please enter the admin password: \n");
-                while((ch = _getch()) != 13)
+                do
                 {
-                    sInputPassword[j] = ch;
-                    j++;
-                    printf("*");
-                }
-                sInputPassword[j] = '\0';
-                bMatchingPassword = strcmp(sAdminPassword, sInputPassword);
-                j = 0; // input password reset
-                sInputPassword[0] = '\0'; // input password reset
-                if(bMatchingPassword != 0)
-                {
-                    cPasswordMode = displayPasswordMenu();
-                    if (cPasswordMode == '1')
+                    printf("Please enter the admin password: \n");
+                    while((ch = _getch()) != 13)
                     {
-                        bAskPassword = 1;
+                        sInputPassword[j] = ch;
+                        j++;
+                        printf("*");
                     }
-                }
+                    sInputPassword[j] = '\0';
+                    bMatchingPassword = strcmp(sAdminPassword, sInputPassword);
+                    j = 0; // input password reset
+                    sInputPassword[0] = '\0'; // input password reset
+                    if (bMatchingPassword != 0)
+                    {
+                        cPasswordMode = displayPasswordMenu();
+                        if (cPasswordMode == '1')
+                        {
+                            bAskPassword = 1;
+                        }
+                        if (cPasswordMode == '0')
+                        {
+                            cAdminMode = 'B';
+                            bAskPassword = 0;
+                        }
+                    }
+                } while (bMatchingPassword != 0 && bAskPassword == 1);
                 if (bMatchingPassword == 0)
                 {
                     printf("\nYou have entered the correct password.\n");
@@ -190,9 +197,9 @@ int main()
                         {
                             printf("You chose Export data!\n");
                         }
-                        } while (cAdminMode != 'B');
-                    }
+                    } while (cAdminMode != 'B');
                 }
+            }
         }
         if (cMode == 'P')
         {
