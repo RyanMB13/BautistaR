@@ -31,6 +31,7 @@ struct playerRecord
     String20 name;
     int score;
     char ch;
+    int rank;
 };
 
 /*
@@ -635,9 +636,59 @@ void exportRecord(struct questionRecord *A, int n)
     } while (cChoice != 'N');
 } 
 
+/*
+playQuiz allows the user to play the quiz game.
+@param questionRecord *A the array of structures that stores the information about the questions.
+@param playerRecord *B the array of structures that stores the information about the player and their score.
+@param n the maximum number of array elements
+*/
+void playQuiz(struct questionRecord *A, struct playerRecord *B, int n)
+{
 
+}
 
+/*
+viewScores allows the user to display the scores of all the players.
+@param playerRecord *A the array of structures that stores the information about the player and their score.
+@param n the maximum number of array elements
+*/
 
+void viewScores(struct playerRecord *A, int n)
+{
+    int i;
+    int nCounter;
+    for (i = 0; i < n; i++)
+    {
+        if ((A+i)->score >= 0)
+        {
+            nCounter += 1;
+        }
+    }
+    for(i = 0; i < n; i++)
+    {
+        (A+i)->rank = nCounter;
+    }
+
+    for (i = 0; i < n; i++)
+    {
+        if ((A+i+1)->score > (A+i)->score)
+        {
+            (A+i+1)->rank = nCounter - 1;
+        }
+        if ((A+i+1)->score < (A+i)->score)
+        {
+            (A+i)->rank = nCounter - 1;
+        }
+    }
+    for (i = 0; i < n; i++)
+    {
+        printf("Rank %d\n", (A+i)->rank);
+        printf("Name: %s\n", (A+i)->name);
+        printf("Score %d", (A+i)->score);
+        printf("%c",(A+i)->ch);
+    }
+    
+}
 
 int main()
 {
@@ -650,6 +701,7 @@ int main()
     String30 sAdminPassword, sInputPassword;
     char cMode, cPlayMode, cAdminMode, cPasswordMode;
     struct questionRecord questionItems[SIZE];
+    struct playerRecord playerData[SIZE];
     displayIntro();
     while (cMode != 'E')
     {
@@ -737,11 +789,11 @@ int main()
                 cPlayMode = displayPlayMenu();
                 if (cPlayMode == 'P')
                 {
-                    printf("You chose Play!\n");
+                    playQuiz(questionItems, playerData, SIZE);
                 }
                 if (cPlayMode == 'V')
                 {
-                    printf("You chose View Scores!\n");
+                    viewScores(playerData, SIZE);
                 }
             } while (cPlayMode != 'E');
         }
