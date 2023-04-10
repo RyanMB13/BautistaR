@@ -656,12 +656,12 @@ int playQuiz(struct questionRecord *A, struct playerRecord *B, int n, int nPlaye
     char bChoice;
     int bValidTopic;
     int bValidAnswer;
-    printf("Please input your name\n");
+    printf("Please input your name:\n");
     scanf(" %[^\n]s", &sName);
     nPlayer += 1;
     do
     {
-        printf("Would you like to end the game?\n[Y]es\n[N]o\n");
+        printf("Would you like to play the game?\n[Y]es\n[N]o\n");
         do
         {
             printf("Enter your choice: \n");
