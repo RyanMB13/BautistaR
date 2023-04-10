@@ -225,7 +225,7 @@ void addRecord(struct questionRecord *A, int n)
                 strcpy((A+j)->choice3, &sChoice3);
                 strcpy((A+j)->answer, &sAnswer);
                 printf("You have successfully added a record!\n");
-
+                j++;
             }
         }
     } while (cChoice != 'N');
@@ -606,7 +606,7 @@ exportRecord allows the user to export records to a file.
 @param n the maximum number of array elements
 */
 
-void exportRecord(struct questionRecord *A, FILE *fp_output, int *n)
+void exportRecord(struct questionRecord *A, FILE *fp_output, int n)
 {
     int i;
     char cChoice;
