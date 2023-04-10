@@ -195,10 +195,10 @@ void addRecord(struct questionRecord *A, int n)
             }
             else
             {
-                printf("None of the choices match with the answer\nPlease try again.\n");
+                printf("None of the choices match with the answer.\nPlease try again.\n");
                 bRightChoice = 0;
             }
-        } while (bRightChoice = 0);
+        } while (bRightChoice != 1);
         for (i = 0; i < n; i++)
         {
             if(strcmp(sTopic, (A+i)->topic) == 0)
@@ -213,7 +213,7 @@ void addRecord(struct questionRecord *A, int n)
         strcpy((A+nCounter)->choice2, sChoice2);
         strcpy((A+nCounter)->choice3, sChoice3);
         strcpy((A+nCounter)->answer, sAnswer);
-        print("You have successfully added a record!\n");
+        printf("You have successfully added a record!\n");
     }
 }
 
