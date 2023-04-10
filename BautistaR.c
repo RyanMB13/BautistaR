@@ -133,12 +133,13 @@ char displayPasswordMenu()
 addRecord allows the user to add a record if their question and answer input are unique. If the input is already present, the function indicates it.
 @param questionRecord *A the array of structures that stores the information about the questions.
 @param n the maximum number of array elements
+@return number of added records
 */
 void addRecord(struct questionRecord *A, int n)
 {
     int i;
-    int nCounter = 0;
-    int nNumber = 0;
+    int j = 0;
+    int nNumber = 1;
     int bRightChoice;
     int bQuestionAlreadyPresent;
     int bAnswerAlreadyPresent;
@@ -148,7 +149,7 @@ void addRecord(struct questionRecord *A, int n)
     String150 sQuestion;
     do 
     {
-        printf("Would you like to add a record?\n");
+        printf("Would you like to add a record?\n[Y]es\n[N]o\n");
         do
             {
                 printf("Enter your choice: \n");
@@ -161,17 +162,9 @@ void addRecord(struct questionRecord *A, int n)
         if (cChoice == 'Y')
         {
             printf("Please input a question: \n");
-            scanf(" %[^\n]s", &sQuestion);
+            scanf(" %[^\n]", &sQuestion);
             printf("Please input an answer: \n");
-            scanf(" %[^\n]s", &sAnswer);
-            //checks how many records are present
-            for (i = 0; i < n; i++)
-            {
-                if ((A+i)->number >= 1)
-                {
-                    nCounter++;
-                }
-            }
+            scanf(" %[^\n]", &sAnswer);
             //checks if pair are already present
             for (i = 0; i < n; i++)
             {
@@ -196,15 +189,15 @@ void addRecord(struct questionRecord *A, int n)
                 printf("Question: %s\n", sQuestion);
                 printf("Answer: %s\n", sAnswer);
                 printf("Please input a topic: \n");
-                scanf(" %[^\n]s", &sTopic);
+                scanf(" %[^\n]", &sTopic);
                 do //loops until there is a match between choices and answer
                 {
                     printf("Please input choice 1: \n");
-                    scanf(" %[^\n]s", &sChoice1);
+                    scanf(" %[^\n]", &sChoice1);
                     printf("Please input choice 2: \n");
-                    scanf(" %[^\n]s", &sChoice2);
+                    scanf(" %[^\n]", &sChoice2);
                     printf("Please input choice 3: \n");
-                    scanf(" %[^\n]s", &sChoice3);
+                    scanf(" %[^\n]", &sChoice3);
                     if (strcmp(sAnswer, sChoice1) == 0 ||
                         strcmp(sAnswer, sChoice2) == 0 ||
                         strcmp(sAnswer, sChoice3) == 0)
@@ -224,14 +217,15 @@ void addRecord(struct questionRecord *A, int n)
                         nNumber += 1;
                     }
                 }
-                strcpy((A+nCounter)->topic, sTopic);
-                (A+nCounter)->number = nNumber;
-                strcpy((A+nCounter)->question, sQuestion);
-                strcpy((A+nCounter)->choice1, sChoice1);
-                strcpy((A+nCounter)->choice2, sChoice2);
-                strcpy((A+nCounter)->choice3, sChoice3);
-                strcpy((A+nCounter)->answer, sAnswer);
+                strcpy((A+j)->topic, sTopic);
+                (A+j)->number = nNumber;
+                strcpy((A+j)->question, &sQuestion);
+                strcpy((A+j)->choice1, &sChoice1);
+                strcpy((A+j)->choice2, &sChoice2);
+                strcpy((A+j)->choice3, &sChoice3);
+                strcpy((A+j)->answer, &sAnswer);
                 printf("You have successfully added a record!\n");
+
             }
         }
     } while (cChoice != 'N');
@@ -612,7 +606,7 @@ exportRecord allows the user to export records to a file.
 @param n the maximum number of array elements
 */
 
-void exportRecord(struct questionRecord *A, FILE *fp_output, int n)
+void exportRecord(struct questionRecord *A, FILE *fp_output, int *n)
 {
     int i;
     char cChoice;
@@ -636,13 +630,13 @@ void exportRecord(struct questionRecord *A, FILE *fp_output, int n)
             fp_output = fopen(sFileName, "w");
             for (i = 0; i < n; i++)
             {
-                fprintf("%s\n", (A+i)->topic);
-                fprintf("%d\n", (A+i)->number);
-                fprintf("%s\n", (A+i)->question);
-                fprintf("%s\n", (A+i)->choice1);
-                fprintf("%s\n", (A+i)->choice2);
-                fprintf("%s\n", (A+i)->choice3);
-                fprintf("%s\n", (A+i)->answer);
+                fprintf(fp_output, "%s\n", (A+i)->topic);
+                fprintf(fp_output, "%d\n", (A+i)->number);
+                fprintf(fp_output, "%s\n", (A+i)->question);
+                fprintf(fp_output, "%s\n", (A+i)->choice1);
+                fprintf(fp_output, "%s\n", (A+i)->choice2);
+                fprintf(fp_output, "%s\n", (A+i)->choice3);
+                fprintf(fp_output, "%s\n", (A+i)->answer);
             }
             fclose(fp_output);
             printf("You have successfully exported data!\n");
@@ -907,9 +901,9 @@ void exportScores(struct playerRecord *A, FILE *fp_output, int n)
             fp_output = fopen("score.txt", "w");
             for (i = 0; i < n; i++)
             {
-                fprintf("%s\n", (A+i)->name);
-                fprintf("%d\n", (A+i)->score);
-                fprintf("%c\n", (A+i)->ch);
+                fprintf(fp_output, "%s\n", (A+i)->name);
+                fprintf(fp_output, "%d\n", (A+i)->score);
+                fprintf(fp_output, "%c\n", (A+i)->ch);
             }
             fclose(fp_output);
         }
