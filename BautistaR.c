@@ -134,7 +134,9 @@ addRecord allows the user to add a record if their question and answer input are
 void addRecord(struct questionRecord *A, int n)
 {
     int i;
+    int nCounter = 0;
     int nNumber = 0;
+    int bRightChoice;
     int bQuestionAlreadyPresent;
     int bAnswerAlreadyPresent;
     String20 sTopic;
@@ -144,11 +146,21 @@ void addRecord(struct questionRecord *A, int n)
     scanf(" %[^\n]s", &sQuestion);
     printf("Please input an answer: \n");
     scanf(" %[^\n]s", &sAnswer);
+    //checks how many records are present
+    for (i = 0; i < n; i++)
+    {
+        if ((A+i)->number >= 1)
+        {
+            nCounter++;
+        }
+    }
+    //checks if pair are already present
     for (i = 0; i < n; i++)
     {
         bQuestionAlreadyPresent = strcmp(sQuestion, (A+i)->question);
         bAnswerAlreadyPresent = strcmp(sAnswer, (A+i)->answer);
     }
+    // if qna are already present
     if (bQuestionAlreadyPresent == 0 && bAnswerAlreadyPresent == 0)
     {
         printf("Topic: %s\n", (A+i)->topic);
@@ -160,18 +172,33 @@ void addRecord(struct questionRecord *A, int n)
         printf("Answer: %s\n", (A+i)->answer);
         printf("The question and answer are already listed in the records.\n");
     }
+    // if qna are not yet present
     if (bQuestionAlreadyPresent != 0 && bAnswerAlreadyPresent != 0)
     {
         printf("Question: %s\n", sQuestion);
         printf("Answer: %s\n", sAnswer);
         printf("Please input a topic: \n");
         scanf(" %[^\n]s", &sTopic);
-        printf("Please input choice 1: \n");
-        scanf(" %[^\n]s", &sChoice1);;
-        printf("Please input choice 2: \n");
-        scanf(" %[^\n]s", &sChoice2);;
-        printf("Please input choice 3: \n");
-        scanf(" %[^\n]s", &sChoice3);
+        do 
+        {
+            printf("Please input choice 1: \n");
+            scanf(" %[^\n]s", &sChoice1);;
+            printf("Please input choice 2: \n");
+            scanf(" %[^\n]s", &sChoice2);;
+            printf("Please input choice 3: \n");
+            scanf(" %[^\n]s", &sChoice3);
+            if (strcmp(sAnswer, sChoice1) == 0 ||
+                strcmp(sAnswer, sChoice2) == 0 ||
+                strcmp(sAnswer, sChoice3) == 0)
+            {
+                bRightChoice = 1;
+            }
+            else
+            {
+                printf("None of the choices match with the answer\nPlease try again.\n");
+                bRightChoice = 0;
+            }
+        } while (bRightChoice = 0);
         for (i = 0; i < n; i++)
         {
             if(strcmp(sTopic, (A+i)->topic) == 0)
@@ -179,20 +206,14 @@ void addRecord(struct questionRecord *A, int n)
                 nNumber += 1;
             }
         }
-        for (i = 0; i < n; i++)
-        {
-            if ((A+i)->number == '\0' )
-            {
-                strcpy((A+i)->topic, sTopic);
-                (A+i)->number = nNumber;
-                strcpy((A+i)->question, sQuestion);
-                strcpy((A+i)->choice1, sChoice1);
-                strcpy((A+i)->choice2, sChoice2);
-                strcpy((A+i)->choice3, sChoice3);
-                strcpy((A+i)->answer, sAnswer);
-            }
-
-        }
+        strcpy((A+nCounter)->topic, sTopic);
+        (A+nCounter)->number = nNumber;
+        strcpy((A+nCounter)->question, sQuestion);
+        strcpy((A+nCounter)->choice1, sChoice1);
+        strcpy((A+nCounter)->choice2, sChoice2);
+        strcpy((A+nCounter)->choice3, sChoice3);
+        strcpy((A+nCounter)->answer, sAnswer);
+        print("You have successfully added a record!\n");
     }
 }
 
@@ -210,11 +231,11 @@ int main()
     displayIntro();
     while (cMode != 'E')
     {
-        cMode = displayMainMenu();
-        bAskPassword = 1;
+        cMode = displayMainMenu(); 
+        bAskPassword = 1; // indicates that password does not need to be asked
         if (cMode == 'M')
         {
-            if (bPassword == 0)
+            if (bPassword == 0) // asks a password if one isnt present.
             {
                 printf("Please enter a password: \n");
                 while((ch = _getch()) != 13)
@@ -227,9 +248,9 @@ int main()
                 printf("\nYou have successfully set an admin password!\n");
                 bPassword = 1;
             }
-            if (bPassword == 1 && bAskPassword == 1)
+            if (bPassword == 1 && bAskPassword == 1) // if there is a password and if the program needs to ask for it
             {
-                do
+                do // loops until password is correct or back to main menu is called
                 {
                     printf("Please enter the admin password: \n");
                     while((ch = _getch()) != 13)
@@ -244,7 +265,7 @@ int main()
                     sInputPassword[0] = '\0'; // input password reset
                     if (bMatchingPassword != 0)
                     {
-                        cPasswordMode = displayPasswordMenu();
+                        cPasswordMode = displayPasswordMenu(); // asks if the user wants to try again or wants to go back to the main menu
                         if (cPasswordMode == '1')
                         {
                             bAskPassword = 1;
@@ -256,16 +277,15 @@ int main()
                         }
                     }
                 } while (bMatchingPassword != 0 && bAskPassword == 1);
-                if (bMatchingPassword == 0)
+                if (bMatchingPassword == 0) // executes if and only if password is correct
                 {
                     printf("\nYou have entered the correct password.\n");
                     do
                     {
-                        bAskPassword = 0;
+                        bAskPassword = 0; // indicates to not ask the password
                         cAdminMode = displayAdminMenu();
                         if (cAdminMode == 'A')
                         {
-                            printf("You chose Add a record!\n");
                             addRecord(questionItems, SIZE);
                         }
                         if (cAdminMode == 'C')
