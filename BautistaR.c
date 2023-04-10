@@ -93,7 +93,7 @@ displayMainMenu displays the player menu with a user-friendly text based interfa
 char displayAdminMenu()
 {
     char cChoice;
-    printf("You are now viewing the Admin Menu. Please choose a mode:\n[A]dd a record\n[C]hange a record\n[D]elete a record\n[I]mport data\n[E]xport data\n[B]ack to the main menu.\n");
+    printf("You are now viewing the Manage Data Menu. Please choose a mode:\n[A]dd a record\n[C]hange a record\n[D]elete a record\n[I]mport data\n[E]xport data\n[B]ack to the main menu.\n");
     do
     {
         printf("Enter your choice: \n");
@@ -140,82 +140,99 @@ void addRecord(struct questionRecord *A, int n)
     int bRightChoice;
     int bQuestionAlreadyPresent;
     int bAnswerAlreadyPresent;
+    char cChoice;
     String20 sTopic;
     String30 sAnswer, sChoice1, sChoice2, sChoice3;
     String150 sQuestion;
-    printf("Please input a question: \n");
-    scanf(" %[^\n]s", &sQuestion);
-    printf("Please input an answer: \n");
-    scanf(" %[^\n]s", &sAnswer);
-    //checks how many records are present
-    for (i = 0; i < n; i++)
+    do 
     {
-        if ((A+i)->number >= 1)
+        printf("Would you like to add a record?\n");
+        do
+            {
+                printf("Enter your choice: \n");
+                scanf(" %c", &cChoice);
+                if (cChoice != 'Y' && cChoice != 'N')
+                {
+                    printf("Invalid input!\n");
+                }
+            } while (cChoice != 'Y' && cChoice != 'N');
+        if (cChoice == 'Y')
         {
-            nCounter++;
+            printf("Please input a question: \n");
+            scanf(" %[^\n]s", &sQuestion);
+            printf("Please input an answer: \n");
+            scanf(" %[^\n]s", &sAnswer);
+            //checks how many records are present
+            for (i = 0; i < n; i++)
+            {
+                if ((A+i)->number >= 1)
+                {
+                    nCounter++;
+                }
+            }
+            //checks if pair are already present
+            for (i = 0; i < n; i++)
+            {
+                bQuestionAlreadyPresent = strcmp(sQuestion, (A+i)->question);
+                bAnswerAlreadyPresent = strcmp(sAnswer, (A+i)->answer);
+            }
+            // if qna are already present
+            if (bQuestionAlreadyPresent == 0 && bAnswerAlreadyPresent == 0)
+            {
+                printf("Topic: %s\n", (A+i)->topic);
+                printf("Question Number: %d\n", (A+i)->number);
+                printf("Question: %s\n", (A+i)->question);
+                printf("Choice 1: %s\n", (A+i)->choice1);
+                printf("Choice 2: %s\n", (A+i)->choice2);
+                printf("Choice 3: %s\n", (A+i)->choice3);
+                printf("Answer: %s\n", (A+i)->answer);
+                printf("The question and answer are already listed in the records.\n");
+            }
+            // if qna are not yet present
+            if (bQuestionAlreadyPresent != 0 && bAnswerAlreadyPresent != 0)
+            {
+                printf("Question: %s\n", sQuestion);
+                printf("Answer: %s\n", sAnswer);
+                printf("Please input a topic: \n");
+                scanf(" %[^\n]s", &sTopic);
+                do //loops until there is a match between choices and answer
+                {
+                    printf("Please input choice 1: \n");
+                    scanf(" %[^\n]s", &sChoice1);
+                    printf("Please input choice 2: \n");
+                    scanf(" %[^\n]s", &sChoice2);
+                    printf("Please input choice 3: \n");
+                    scanf(" %[^\n]s", &sChoice3);
+                    if (strcmp(sAnswer, sChoice1) == 0 ||
+                        strcmp(sAnswer, sChoice2) == 0 ||
+                        strcmp(sAnswer, sChoice3) == 0)
+                    {
+                        bRightChoice = 1;
+                    }
+                    else
+                    {
+                        printf("None of the choices match with the answer.\nPlease try again.\n");
+                        bRightChoice = 0;
+                    }
+                } while (bRightChoice != 1);
+                for (i = 0; i < n; i++)
+                {
+                    if(strcmp(sTopic, (A+i)->topic) == 0)
+                    {
+                        nNumber += 1;
+                    }
+                }
+                strcpy((A+nCounter)->topic, sTopic);
+                (A+nCounter)->number = nNumber;
+                strcpy((A+nCounter)->question, sQuestion);
+                strcpy((A+nCounter)->choice1, sChoice1);
+                strcpy((A+nCounter)->choice2, sChoice2);
+                strcpy((A+nCounter)->choice3, sChoice3);
+                strcpy((A+nCounter)->answer, sAnswer);
+                printf("You have successfully added a record!\n");
+            }
         }
-    }
-    //checks if pair are already present
-    for (i = 0; i < n; i++)
-    {
-        bQuestionAlreadyPresent = strcmp(sQuestion, (A+i)->question);
-        bAnswerAlreadyPresent = strcmp(sAnswer, (A+i)->answer);
-    }
-    // if qna are already present
-    if (bQuestionAlreadyPresent == 0 && bAnswerAlreadyPresent == 0)
-    {
-        printf("Topic: %s\n", (A+i)->topic);
-        printf("Question Number: %d\n", (A+i)->number);
-        printf("Question: %s\n", (A+i)->question);
-        printf("Choice 1: %s\n", (A+i)->choice1);
-        printf("Choice 2: %s\n", (A+i)->choice2);
-        printf("Choice 3: %s\n", (A+i)->choice3);
-        printf("Answer: %s\n", (A+i)->answer);
-        printf("The question and answer are already listed in the records.\n");
-    }
-    // if qna are not yet present
-    if (bQuestionAlreadyPresent != 0 && bAnswerAlreadyPresent != 0)
-    {
-        printf("Question: %s\n", sQuestion);
-        printf("Answer: %s\n", sAnswer);
-        printf("Please input a topic: \n");
-        scanf(" %[^\n]s", &sTopic);
-        do //loops until there is a match between choices and answer
-        {
-            printf("Please input choice 1: \n");
-            scanf(" %[^\n]s", &sChoice1);
-            printf("Please input choice 2: \n");
-            scanf(" %[^\n]s", &sChoice2);
-            printf("Please input choice 3: \n");
-            scanf(" %[^\n]s", &sChoice3);
-            if (strcmp(sAnswer, sChoice1) == 0 ||
-                strcmp(sAnswer, sChoice2) == 0 ||
-                strcmp(sAnswer, sChoice3) == 0)
-            {
-                bRightChoice = 1;
-            }
-            else
-            {
-                printf("None of the choices match with the answer.\nPlease try again.\n");
-                bRightChoice = 0;
-            }
-        } while (bRightChoice != 1);
-        for (i = 0; i < n; i++)
-        {
-            if(strcmp(sTopic, (A+i)->topic) == 0)
-            {
-                nNumber += 1;
-            }
-        }
-        strcpy((A+nCounter)->topic, sTopic);
-        (A+nCounter)->number = nNumber;
-        strcpy((A+nCounter)->question, sQuestion);
-        strcpy((A+nCounter)->choice1, sChoice1);
-        strcpy((A+nCounter)->choice2, sChoice2);
-        strcpy((A+nCounter)->choice3, sChoice3);
-        strcpy((A+nCounter)->answer, sAnswer);
-        printf("You have successfully added a record!\n");
-    }
+    } while (cChoice != "N");
 }
 
 /*
@@ -498,9 +515,10 @@ importRecord allows the user to import records from a file.
 void importRecord(struct questionRecord *A, int n)
 {
     int i;
-    int nCounter;
+    int nCounter = 0;
     int bFileExists;
     int bAskFileName;
+    char ch;
     char cChoice;
     char cImport;
     String30 *sFileName;
@@ -549,23 +567,77 @@ void importRecord(struct questionRecord *A, int n)
                     nCounter += 1;
                 }
             }
-            for (i = nCounter; i < n; i++)
+            do 
             {
-                fscanf(fp, " %[^\n]s", (A+i)->topic);
-                fscanf(fp, "%d", &(A+i)->number);
-                fscanf(fp, " %[^\n]s", (A+i)->question);
-                fscanf(fp, " %[^\n]s", (A+i)->choice1);
-                fscanf(fp, " %[^\n]s", (A+i)->choice2);
-                fscanf(fp, " %[^\n]s", (A+i)->choice3);
-                fscanf(fp, " %[^\n]s", (A+i)->answer);
-            }
+                for (i = nCounter; i < n; i++)
+                {
+                    fscanf(fp, " %[^\n]s", (A+i)->topic);
+                    fscanf(fp, "%d", &(A+i)->number);
+                    fscanf(fp, " %[^\n]s", (A+i)->question);
+                    fscanf(fp, " %[^\n]s", (A+i)->choice1);
+                    fscanf(fp, " %[^\n]s", (A+i)->choice2);
+                    fscanf(fp, " %[^\n]s", (A+i)->choice3);
+                    fscanf(fp, " %[^\n]s", (A+i)->answer);
+                }
+            } while (fscanf(fp, "%c", &ch) != EOF);
             fclose(fp);
+            printf("You have successfully imported data!\n");
             bAskFileName = 1;
             cImport = 'B';
         }
     } while (cImport != 'B' && bAskFileName == 0);
     
 }
+
+/*
+exportRecord allows the user to export records to a file.
+@param questionRecord *A the array of structures that stores the information about the questions.
+@param n the maximum number of array elements
+*/
+
+void exportRecord(struct questionRecord *A, int n)
+{
+    int i;
+    char cChoice;
+    String30 sFileName;
+    FILE *fp;
+    do 
+    {
+        printf("Would you like to export data?\n[Y]es\n[N]o\n");
+        do
+        {
+            printf("Enter your choice: \n");
+            scanf(" %c", &cChoice);
+            if (cChoice != 'Y' && cChoice != 'N')
+            {
+                printf("Invalid input!\n");
+            }
+        }   while (cChoice != 'Y' && cChoice != 'N');
+        if (cChoice == 'Y')
+        {
+            printf("Please enter the file name: \n");
+            scanf(" %[^\n]s", &sFileName);
+            fp = fopen(sFileName, "w");
+            for (i = 0; i < n; i++)
+            {
+                fprintf("%s\n", (A+i)->topic);
+                fprintf("%d\n", (A+i)->number);
+                fprintf("%s\n", (A+i)->question);
+                fprintf("%s\n", (A+i)->choice1);
+                fprintf("%s\n", (A+i)->choice2);
+                fprintf("%s\n", (A+i)->choice3);
+                fprintf("%s\n", (A+i)->answer);
+            }
+            fclose(fp);
+            printf("You have successfully exported data!\n");
+            
+        }
+    } while (cChoice != 'N');
+} 
+
+
+
+
 
 int main()
 {
@@ -652,7 +724,7 @@ int main()
                         }
                         if (cAdminMode == 'E')
                         {
-                            printf("You chose Export data!\n");
+                            exportRecord(questionItems, SIZE);
                         }
                     } while (cAdminMode != 'B');
                 }
