@@ -233,7 +233,7 @@ void addRecord(struct questionRecord *A, int n)
                 printf("You have successfully added a record!\n");
             }
         }
-    } while (cChoice != "N");
+    } while (cChoice != 'N');
 }
 
 /*
@@ -511,9 +511,10 @@ void deleteRecord(struct questionRecord *A, int n)
 /*
 importRecord allows the user to import records from a file.
 @param questionRecord *A the array of structures that stores the information about the questions.
+@param *fp_input the file pointer that points to the file to be read
 @param n the maximum number of array elements
 */
-void importRecord(struct questionRecord *A, int n)
+void importRecord(struct questionRecord *A, FILE *fp_input, int n)
 {
     int i;
     int nCounter = 0;
@@ -523,7 +524,6 @@ void importRecord(struct questionRecord *A, int n)
     char cChoice;
     char cImport;
     String30 *sFileName;
-    FILE *fp;
     do
     {
         printf("Please enter the filename: \n");
@@ -560,7 +560,7 @@ void importRecord(struct questionRecord *A, int n)
         }
         if (bFileExists == 1) // file exists
         {
-            fp = fopen(sFileName, "r");
+            fp_input = fopen(sFileName, "r");
             for (i = 0; i < n; i++) // checks if there are already records present
             {
                 if ((A+i)->number >= 1)
@@ -572,16 +572,16 @@ void importRecord(struct questionRecord *A, int n)
             {
                 for (i = nCounter; i < n; i++)
                 {
-                    fscanf(fp, " %[^\n]s", (A+i)->topic);
-                    fscanf(fp, "%d", &(A+i)->number);
-                    fscanf(fp, " %[^\n]s", (A+i)->question);
-                    fscanf(fp, " %[^\n]s", (A+i)->choice1);
-                    fscanf(fp, " %[^\n]s", (A+i)->choice2);
-                    fscanf(fp, " %[^\n]s", (A+i)->choice3);
-                    fscanf(fp, " %[^\n]s", (A+i)->answer);
+                    fscanf(fp_input, " %[^\n]s", (A+i)->topic);
+                    fscanf(fp_input, "%d", &(A+i)->number);
+                    fscanf(fp_input, " %[^\n]s", (A+i)->question);
+                    fscanf(fp_input, " %[^\n]s", (A+i)->choice1);
+                    fscanf(fp_input, " %[^\n]s", (A+i)->choice2);
+                    fscanf(fp_input, " %[^\n]s", (A+i)->choice3);
+                    fscanf(fp_input, " %[^\n]s", (A+i)->answer);
                 }
-            } while (fscanf(fp, "%c", &ch) != EOF);
-            fclose(fp);
+            } while (fscanf(fp_input, "%c", &ch) != EOF);
+            fclose(fp_input);
             printf("You have successfully imported data!\n");
             bAskFileName = 1;
             cImport = 'B';
@@ -593,15 +593,15 @@ void importRecord(struct questionRecord *A, int n)
 /*
 exportRecord allows the user to export records to a file.
 @param questionRecord *A the array of structures that stores the information about the questions.
+@param *fp_output the file pointer that points to the file to be written
 @param n the maximum number of array elements
 */
 
-void exportRecord(struct questionRecord *A, int n)
+void exportRecord(struct questionRecord *A, FILE *fp_output, int n)
 {
     int i;
     char cChoice;
     String30 sFileName;
-    FILE *fp;
     do 
     {
         printf("Would you like to export data?\n[Y]es\n[N]o\n");
@@ -618,7 +618,7 @@ void exportRecord(struct questionRecord *A, int n)
         {
             printf("Please enter the file name: \n");
             scanf(" %[^\n]s", &sFileName);
-            fp = fopen(sFileName, "w");
+            fp_output = fopen(sFileName, "w");
             for (i = 0; i < n; i++)
             {
                 fprintf("%s\n", (A+i)->topic);
@@ -629,7 +629,7 @@ void exportRecord(struct questionRecord *A, int n)
                 fprintf("%s\n", (A+i)->choice3);
                 fprintf("%s\n", (A+i)->answer);
             }
-            fclose(fp);
+            fclose(fp_output);
             printf("You have successfully exported data!\n");
             
         }
@@ -642,9 +642,36 @@ playQuiz allows the user to play the quiz game.
 @param playerRecord *B the array of structures that stores the information about the player and their score.
 @param n the maximum number of array elements
 */
+
 void playQuiz(struct questionRecord *A, struct playerRecord *B, int n)
 {
 
+}
+
+/*
+importScores allows the user to import the scores of all the players.
+@param playerRecord *A the array of structures that stores the information about the player and their score.
+@param *fp_input the file pointer that points to the file to be read
+@param n the maximum number of array elements
+*/
+
+void importScores(struct playerRecord *A, FILE *fp_input, int n)
+{
+    int i;
+    char ch;
+
+    fp_input = fopen("score.txt", "r");
+    for (i = 0; i < n i ++)
+    {
+        do 
+        {
+            fscanf(fp_input, " %[^\n]s", (A+i)->name);
+            fscanf(fp_input, " %d", (A+i)->score);
+            fscanf(fp_input, " %c", (A+i)->ch);
+
+        } while (fscanf(fp_input,"%c", &ch) != EOF);
+    }
+    fclose(fp_input);
 }
 
 /*
@@ -657,37 +684,90 @@ void viewScores(struct playerRecord *A, int n)
 {
     int i;
     int nCounter;
-    for (i = 0; i < n; i++)
+    char cChoice;
+    do
     {
-        if ((A+i)->score >= 0)
+        printf("Would you like to view the scores?\n[Y]es\n[N]o\n");
+        do
         {
-            nCounter += 1;
-        }
-    }
-    for(i = 0; i < n; i++)
-    {
-        (A+i)->rank = nCounter;
-    }
+            printf("Enter your choice: \n");
+            scanf(" %c", &cChoice);
+            if (cChoice != 'Y' && cChoice != 'N')
+            {
+                printf("Invalid input!\n");
+            }
+        }   while (cChoice != 'Y' && cChoice != 'N');
+        if (cChoice == 'Y')
+        {
+            for (i = 0; i < n; i++)
+            {
+                if ((A+i)->score >= 0)
+                {
+                    nCounter += 1;
+                }
+            }
+            for(i = 0; i < n; i++)
+            {
+                (A+i)->rank = nCounter;
+            }
 
-    for (i = 0; i < n; i++)
-    {
-        if ((A+i+1)->score > (A+i)->score)
-        {
-            (A+i+1)->rank = nCounter - 1;
+            for (i = 0; i < n; i++)
+            {
+                if ((A+i+1)->score > (A+i)->score)
+                {
+                    (A+i+1)->rank = nCounter - 1;
+                }
+                if ((A+i+1)->score < (A+i)->score)
+                {
+                    (A+i)->rank = nCounter - 1;
+                }
+            }
+            for (i = 0; i < n; i++)
+            {
+                printf("Rank %d\n", (A+i)->rank);
+                printf("Name: %s\n", (A+i)->name);
+                printf("Score %d", (A+i)->score);
+                printf("%c",(A+i)->ch);
+            }
         }
-        if ((A+i+1)->score < (A+i)->score)
-        {
-            (A+i)->rank = nCounter - 1;
-        }
-    }
-    for (i = 0; i < n; i++)
+    } while (cChoice != 'N');
+}
+
+/*
+exportScores allows the user to export the scores of all the players.
+@param playerRecord *A the array of structures that stores the information about the player and their score.
+@param *fp_output the file pointer that points to the file to be written
+@param n the maximum number of array elements
+*/
+
+void exportScores(struct playerRecord *A, FILE *fp_output, int n)
+{
+    int i;
+    char cChoice;
+    do
     {
-        printf("Rank %d\n", (A+i)->rank);
-        printf("Name: %s\n", (A+i)->name);
-        printf("Score %d", (A+i)->score);
-        printf("%c",(A+i)->ch);
-    }
-    
+        printf("Would you like to export scores?\n[Y]es\n[N]o\n");
+        do
+        {
+            printf("Enter your choice: \n");
+            scanf(" %c", &cChoice);
+            if (cChoice != 'Y' && cChoice != 'N')
+            {
+                printf("Invalid input!\n");
+            }
+        }   while (cChoice != 'Y' && cChoice != 'N');
+        if (cChoice == 'Y')
+        {
+            fp_output = fopen("score.txt", "w");
+            for (i = 0; i < n; i++)
+            {
+                fprintf("%s\n", (A+i)->name);
+                fprintf("%d\n", (A+i)->score);
+                fprintf("%c\n", (A+i)->ch);
+            }
+            fclose(fp_output);
+        }
+    } while (cChoice != 'N');    
 }
 
 int main()
@@ -702,6 +782,8 @@ int main()
     char cMode, cPlayMode, cAdminMode, cPasswordMode;
     struct questionRecord questionItems[SIZE];
     struct playerRecord playerData[SIZE];
+    FILE *fp_input;
+    FILE *fp_output;
     displayIntro();
     while (cMode != 'E')
     {
@@ -772,11 +854,11 @@ int main()
                         }
                         if (cAdminMode == 'I')
                         {
-                            importRecord(questionItems, SIZE);
+                            importRecord(questionItems, fp_input, SIZE);
                         }
                         if (cAdminMode == 'E')
                         {
-                            exportRecord(questionItems, SIZE);
+                            exportRecord(questionItems, fp_output, SIZE);
                         }
                     } while (cAdminMode != 'B');
                 }
@@ -787,9 +869,11 @@ int main()
             do
             {
                 cPlayMode = displayPlayMenu();
+                importScores(playerData, fp_input, SIZE);
                 if (cPlayMode == 'P')
                 {
                     playQuiz(questionItems, playerData, SIZE);
+                    exportScores(playerData, fp_output, SIZE);
                 }
                 if (cPlayMode == 'V')
                 {
