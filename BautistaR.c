@@ -760,7 +760,7 @@ int playQuiz(struct questionRecord *A, struct playerRecord *B, int n, int nPlaye
                             if (strcmp(sAnswer, (A+i)->answer) != 0)
                             {
                                 printf("You are wrong sorry!\n");
-                            printf("Your score is currentl: %d", nScore);
+                                printf("Your score is currentl: %d", nScore);
                             }
                         }
                     }
