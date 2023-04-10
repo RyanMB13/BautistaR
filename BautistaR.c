@@ -141,9 +141,9 @@ void addRecord(struct questionRecord *A, int n)
     String30 sAnswer, sChoice1, sChoice2, sChoice3;
     String150 sQuestion;
     printf("Please input a question: \n");
-    scanf(" %[^\n]s", sQuestion);
+    scanf(" %[^\n]s", &sQuestion);
     printf("Please input an answer: \n");
-    scanf(" %[^\n]s", sAnswer);
+    scanf(" %[^\n]s", &sAnswer);
     for (i = 0; i < n; i++)
     {
         bQuestionAlreadyPresent = strcmp(sQuestion, (A+i)->question);
@@ -165,13 +165,13 @@ void addRecord(struct questionRecord *A, int n)
         printf("Question: %s\n", sQuestion);
         printf("Answer: %s\n", sAnswer);
         printf("Please input a topic: \n");
-        scanf(" %[^\n]s", sTopic);
+        scanf(" %[^\n]s", &sTopic);
         printf("Please input choice 1: \n");
-        scanf(" %[^\n]s", sChoice1);;
+        scanf(" %[^\n]s", &sChoice1);;
         printf("Please input choice 2: \n");
-        scanf(" %[^\n]s", sChoice2);;
+        scanf(" %[^\n]s", &sChoice2);;
         printf("Please input choice 3: \n");
-        scanf(" %[^\n]s", sChoice3);
+        scanf(" %[^\n]s", &sChoice3);
         for (i = 0; i < n; i++)
         {
             if(strcmp(sTopic, (A+i)->topic) == 0)
@@ -194,7 +194,6 @@ void addRecord(struct questionRecord *A, int n)
 
         }
     }
-    
 }
 
 int main()
