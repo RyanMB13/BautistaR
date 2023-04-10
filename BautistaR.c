@@ -179,12 +179,12 @@ void addRecord(struct questionRecord *A, int n)
         printf("Answer: %s\n", sAnswer);
         printf("Please input a topic: \n");
         scanf(" %[^\n]s", &sTopic);
-        do 
+        do //loops until there is a match between choices and answer
         {
             printf("Please input choice 1: \n");
-            scanf(" %[^\n]s", &sChoice1);;
+            scanf(" %[^\n]s", &sChoice1);
             printf("Please input choice 2: \n");
-            scanf(" %[^\n]s", &sChoice2);;
+            scanf(" %[^\n]s", &sChoice2);
             printf("Please input choice 3: \n");
             scanf(" %[^\n]s", &sChoice3);
             if (strcmp(sAnswer, sChoice1) == 0 ||
@@ -215,6 +215,110 @@ void addRecord(struct questionRecord *A, int n)
         strcpy((A+nCounter)->answer, sAnswer);
         printf("You have successfully added a record!\n");
     }
+}
+
+/*
+changeRecord allows the user to edit a record.
+@param questionRecord *A the array of structures that stores the information about the questions.
+@param n the maximum number of array elements
+*/
+void changeRecord(struct questionRecord *A, int n)
+{
+    int i;
+    int bCorrectInput;
+    int nNumberOfQuestions = 0;
+    int nInputNumber;
+    char cChoice;
+    String20 sTopic;
+    String30 sAnswer, sChoice1, sChoice2, sChoice3;
+    String150 sQuestion;
+    // prints the topic if the question number is equal to 1
+    printf("The topics are: \n");
+    for(i = 0; i < n; i++)
+    {
+        if((A+i)->number == 1)
+        {
+            printf("%s\n", (A+i)->topic);
+        }
+    }
+    printf("Please choose a topic to edit.\n");
+    scanf(" %[^\n]s", &sTopic);
+    // prints the question and question number if topic is the same as input
+    for (i = 0; i < n; i++)
+    {
+        if (strcmp(sTopic, (A+i)->topic) == 0)
+        {
+            printf("Question: %s\n", (A+i)->question);
+            printf("Question Number: %d\n", (A+i)->number);
+            nNumberOfQuestions += 1;
+        }
+    }
+   do // loop to check if input is less than or equal to the number of questions under the topic.
+   {
+        printf("Please choose a question number to change.\n");
+        scanf(" %d", &nInputNumber);
+        if (nInputNumber > nNumberOfQuestions)
+        {
+            printf("Invalid input!\n");
+            bCorrectInput = 0;
+        }
+        if (nInputNumber <= nNumberOfQuestions)
+        {
+            bCorrectInput = 1;
+        }
+    } while (bCorrectInput != 1);
+    printf("Topic: %s\n", (A+nInputNumber)->topic);
+    printf("Question: %s\n", (A+nInputNumber)->question);
+    printf("Choice 1: %s\n", (A+nInputNumber)->choice1);
+    printf("Choice 2: %s\n", (A+nInputNumber)->choice2);
+    printf("Choice 3: %s\n", (A+nInputNumber)->choice3);
+    printf("Answer: %s\n", (A+nInputNumber)->answer);
+    printf("Which field will be changed?\n[T]opic\n[Q]uestion\n[1]Choice 1\n[2]Choice 2\n[3]Choice 3\n[A]nswer\n");
+    {
+        printf("Enter your choice: \n");
+        scanf(" %c", &cChoice);
+        if (cChoice != 'T' && cChoice != 'Q' && cChoice != '1' && cChoice != '2' && cChoice != '3' && cChoice != 'A')
+        {
+            printf("Invalid input!\n");
+        }
+    }   while (cChoice != 'T' && cChoice != 'Q' && cChoice != '1' && cChoice != '2' && cChoice != '3' && cChoice != 'A');
+    if (cChoice == 'T')
+    {
+        printf("Please input a topic: \n");
+        scanf(" %[^\n]s", &sTopic);
+        strcpy((A+nInputNumber)->topic, sTopic);
+    }
+    if (cChoice == 'Q')
+    {
+        printf("Please input a question: \n");
+        scanf(" %[^\n]s", &sQuestion);
+        strcpy((A+nInputNumber)->question, sQuestion);
+    }
+    if (cChoice == '1')
+    {
+        printf("Please input choice 1: \n");
+        scanf(" %[^\n]s", &sChoice1);
+        strcpy((A+nInputNumber)->choice1, sChoice1);
+    }
+    if (cChoice == '2')
+    {
+        printf("Please input a choice 2: \n");
+        scanf(" %[^\n]s", &sChoice2);
+        strcpy((A+nInputNumber)->choice2, sChoice2);
+    }
+    if (cChoice == '3')
+    {
+        printf("Please input a choice 3: \n");
+        scanf(" %[^\n]s", &sChoice3);
+        strcpy((A+nInputNumber)->choice3, sChoice3);
+    }
+    if (cChoice == 'A')
+    {
+        printf("Please input an answer: \n");
+        scanf(" %[^\n]s", &sAnswer);
+        strcpy((A+nInputNumber)->answer, sAnswer);
+    }
+    
 }
 
 int main()
@@ -290,7 +394,7 @@ int main()
                         }
                         if (cAdminMode == 'C')
                         {
-                            printf("You chose Change a record!\n");
+                            changeRecord(questionItems, SIZE);
                         }
                         if (cAdminMode == 'D')
                         {
