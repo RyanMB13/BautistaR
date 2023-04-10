@@ -10,6 +10,7 @@ Ryan Matthew Mabanag Bautista, DLSU ID# 12113972
 #include <string.h>
 #include <conio.h>
 #include <unistd.h>
+#include <stdlib.h>
 
 #define SIZE 30
 
@@ -640,20 +641,24 @@ void exportRecord(struct questionRecord *A, FILE *fp_output, int n)
 playQuiz allows the user to play the quiz game.
 @param questionRecord *A the array of structures that stores the information about the questions.
 @param playerRecord *B the array of structures that stores the information about the player and their score.
-@param n the maximum number of array elements
+@param n the maximum number of array elements\
+@return how many players played
 */
 
-void playQuiz(struct questionRecord *A, struct playerRecord *B, int n)
+int playQuiz(struct questionRecord *A, struct playerRecord *B, int n, int nPlayer)
 {
     int i;
     int nScore = 0;
     int nRandomNumber;
+    int nCounter;
+    String20 sTopic;
     String30 sName, sAnswer;
     char bChoice;
     int bValidTopic;
     int bValidAnswer;
     printf("Please input your name\n");
     scanf(" %[^\n]s", &sName);
+    nPlayer += 1;
     do
     {
         printf("Would you like to end the game?\n[Y]es\n[N]o\n");
@@ -696,7 +701,14 @@ void playQuiz(struct questionRecord *A, struct playerRecord *B, int n)
             } while (bValidTopic != 1);
             if (bValidTopic == 1)
             {
-                // random number generator
+                for (i = 0; i < n; i++)  
+                {
+                    if (strcmp(sTopic, (A+i)->topic) == 0)
+                    {
+                        nCounter += 1;
+                    }
+                }    
+                nRandomNumber = rand() % nCounter+1;
                 for (i = 0; i < n; i++)
                 {
                     if (strcmp(sTopic, (A+i)->topic) == 0 && nRandomNumber == (A+i)->number)
@@ -745,9 +757,11 @@ void playQuiz(struct questionRecord *A, struct playerRecord *B, int n)
         {
             printf("You have ended the game!\n");
             printf("Your total score for this game is: %d\n", nScore);
+            strcpy((B+nPlayer)->name, sName);
+            (B+nPlayer)->score = nScore;
         }
     } while (bChoice != 'N');
-
+    return nPlayer;
 }
 
 /*
@@ -763,7 +777,7 @@ void importScores(struct playerRecord *A, FILE *fp_input, int n)
     char ch;
 
     fp_input = fopen("score.txt", "r");
-    for (i = 0; i < n i ++)
+    for (i = 0; i < n; i++)
     {
         do 
         {
@@ -876,6 +890,7 @@ int main()
 {
     int i = 0;
     int j = 0;
+    int nPlayer = 0;
     int bPassword = 0;
     int bAskPassword = 1;
     int bMatchingPassword;
@@ -974,7 +989,7 @@ int main()
                 importScores(playerData, fp_input, SIZE);
                 if (cPlayMode == 'P')
                 {
-                    playQuiz(questionItems, playerData, SIZE);
+                    nPlayer = playQuiz(questionItems, playerData, SIZE, nPlayer);
                     exportScores(playerData, fp_output, SIZE);
                 }
                 if (cPlayMode == 'V')
