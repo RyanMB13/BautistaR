@@ -645,6 +645,108 @@ playQuiz allows the user to play the quiz game.
 
 void playQuiz(struct questionRecord *A, struct playerRecord *B, int n)
 {
+    int i;
+    int nScore = 0;
+    int nRandomNumber;
+    String30 sName, sAnswer;
+    char bChoice;
+    int bValidTopic;
+    int bValidAnswer;
+    printf("Please input your name\n");
+    scanf(" %[^\n]s", &sName);
+    do
+    {
+        printf("Would you like to end the game?\n[Y]es\n[N]o\n");
+        do
+        {
+            printf("Enter your choice: \n");
+            scanf(" %c", &bChoice);
+            if (bChoice != 'Y' && bChoice != 'N')
+            {
+                printf("Invalid input!\n");
+            }
+        } while (bChoice != 'Y' && bChoice != 'N');
+        if (bChoice == 'Y')
+        {
+            printf("Please choose a topic.\n");
+            printf("The topics are: \n");
+            for(i = 0; i < n; i++)
+            {
+                if((A+i)->number == 1)
+                {
+                    printf("%s\n", (A+i)->topic);
+                }
+            }
+            do // checks if topic is the same as any in array
+            {
+                printf("Please choose a topic to answer.\n");
+                scanf(" %[^\n]s", &sTopic);
+                for (i = 0; i < n; i++)
+                {
+                    if (strcmp(sTopic, (A+i)->topic) != 0)
+                    {
+                        printf("Invalid input.\n");
+                        bValidTopic = 0;
+                    }
+                    if (strcmp(sTopic, (A+i)->topic) == 0)
+                    {
+                        bValidTopic = 1;
+                    }
+                }
+            } while (bValidTopic != 1);
+            if (bValidTopic == 1)
+            {
+                // random number generator
+                for (i = 0; i < n; i++)
+                {
+                    if (strcmp(sTopic, (A+i)->topic) == 0 && nRandomNumber == (A+i)->number)
+                    {
+                        printf("Question: %s", (A+i)->question);
+                        printf("Choice 1: %s", (A+i)->choice1);
+                        printf("Choice 2: %s", (A+i)->choice2);
+                        printf("Choice 3: %s", (A+i)->choice3);
+                        do
+                        {
+                            printf("What is your answer?\n");
+                            scanf(" %[^\n]s", &sAnswer);
+                            if (strcmp(sAnswer, (A+i)->choice1) != 0 && 
+                                strcmp(sAnswer, (A+i)->choice2) != 0 &&
+                                strcmp(sAnswer, (A+i)->choice3) != 0)
+                            {
+                                printf("Invalid input.\n");
+                                bValidAnswer = 0;
+                            }
+                            if (strcmp(sAnswer, (A+i)->choice1) == 0 ||
+                                strcmp(sAnswer, (A+i)->choice2) == 0 ||
+                                strcmp(sAnswer, (A+i)->choice3) == 0)
+                            {
+                                bValidAnswer = 1;
+                            }
+                        } while (bValidAnswer != 1);
+                        if (bValidAnswer == 1)
+                        {
+                            if (strcmp(sAnswer, (A+i)->answer) == 0)
+                            {
+                                printf("You are correct!\n");
+                                nScore += 1;
+                                printf("Your score is currentl: %d", nScore);
+                            }
+                            if (strcmp(sAnswer, (A+i)->answer) != 0)
+                            {
+                                printf("You are wrong sorry!\n");
+                            printf("Your score is currentl: %d", nScore);
+                            }
+                        }
+                    }
+                 }
+            }
+        }
+        if (bChoice == 'N')
+        {
+            printf("You have ended the game!\n");
+            printf("Your total score for this game is: %d\n", nScore);
+        }
+    } while (bChoice != 'N');
 
 }
 
