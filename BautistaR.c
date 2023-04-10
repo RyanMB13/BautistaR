@@ -519,76 +519,90 @@ void importRecord(struct questionRecord *A, FILE *fp_input, int n)
 {
     int i;
     int nCounter = 0;
+    int bTryAgain;
     int bFileExists;
-    int bAskFileName;
     char ch;
     char cChoice;
     char cImport;
     String30 *sFileName;
     do
     {
-        printf("Please enter the filename: \n");
-        scanf(" %[^\n]s", &sFileName);
-        if (access(sFileName, F_OK) == 0)
+        printf("Would you like to import data?\n[Y]es\n[N]o\n");
+        do
         {
-            bFileExists = 1; // file exists
-        }
-        else
-        {
-            bFileExists = 0; // file does not exist
-        }
-        if (bFileExists == 0) // file does not exist
-        {
-            printf("The file is not found. Please choose between:\n[1]Try again\n[0]Back to manage data\n");
-            do
+            printf("Enter your choice: \n");
+            scanf(" %c", &cChoice);
+            if (cChoice != 'Y' && cChoice != 'N')
             {
-                printf("Enter your choice: \n");
-                scanf(" %c", &cChoice);
-                if (cChoice != '1' && cChoice != '0')
-                {
-                    printf("Invalid input!\n");
-                }
-            }   while (cChoice != '1' && cChoice != '0'); 
-            if (cChoice == '1')
-            {
-                bAskFileName = 0;
+                printf("Invalid input!\n");
             }
-            if (cChoice == '0')
-            {
-                bAskFileName = 1;
-                cImport = 'B';
-            }
-        }
-        if (bFileExists == 1) // file exists
+        }   while (cChoice != 'Y' && cChoice != 'N');
+        if (cChoice == 'Y' || bTryAgain == 1) 
         {
-            fp_input = fopen(sFileName, "r");
-            for (i = 0; i < n; i++) // checks if there are already records present
+            printf("Please enter the filename: \n");
+            scanf(" %[^\n]s", &sFileName);
+            if (access(sFileName, F_OK) == 0)
             {
-                if ((A+i)->number >= 1)
-                {
-                    nCounter += 1;
-                }
+                bFileExists = 1; // file exists
             }
-            do 
+            else
             {
-                for (i = nCounter; i < n; i++)
+                bFileExists = 0; // file does not exist
+            }
+            if (bFileExists == 0) // file does not exist
+            {
+                printf("The file is not found. Please choose between:\n[1]Try again\n[0]Back to manage data\n");
+                do
                 {
-                    fscanf(fp_input, " %[^\n]s", (A+i)->topic);
-                    fscanf(fp_input, "%d", &(A+i)->number);
-                    fscanf(fp_input, " %[^\n]s", (A+i)->question);
-                    fscanf(fp_input, " %[^\n]s", (A+i)->choice1);
-                    fscanf(fp_input, " %[^\n]s", (A+i)->choice2);
-                    fscanf(fp_input, " %[^\n]s", (A+i)->choice3);
-                    fscanf(fp_input, " %[^\n]s", (A+i)->answer);
+                    printf("Enter your choice: \n");
+                    scanf(" %c", &cChoice);
+                    if (cChoice != '1' && cChoice != '0')
+                    {
+                        printf("Invalid input!\n");
+                    }
+                } while (cChoice != '1' && cChoice != '0'); 
+                if (cChoice == '1')
+                {
+                   bTryAgain = 1;
                 }
-            } while (fscanf(fp_input, "%c", &ch) != EOF);
-            fclose(fp_input);
-            printf("You have successfully imported data!\n");
-            bAskFileName = 1;
+                if (cChoice == '0')
+                {
+                    cImport = 'B';
+                }
+                }
+                if (bFileExists == 1) // file exists
+                {
+                    bTryAgain = 0;
+                    fp_input = fopen(sFileName, "r");
+                    for (i = 0; i < n; i++) // checks if there are already records present
+                    {
+                        if ((A+i)->number >= 1)
+                        {
+                            nCounter += 1;
+                        }
+                    }
+                    do 
+                    {
+                        for (i = nCounter; i < n; i++)
+                        {
+                            fscanf(fp_input, " %[^\n]s", (A+i)->topic);
+                            fscanf(fp_input, "%d", &(A+i)->number);
+                            fscanf(fp_input, " %[^\n]s", (A+i)->question);
+                            fscanf(fp_input, " %[^\n]s", (A+i)->choice1);
+                            fscanf(fp_input, " %[^\n]s", (A+i)->choice2);
+                            fscanf(fp_input, " %[^\n]s", (A+i)->choice3);
+                            fscanf(fp_input, " %[^\n]s", (A+i)->answer);
+                        }
+                    } while (fscanf(fp_input, "%c", &ch) != EOF);
+                    fclose(fp_input);
+                    printf("You have successfully imported data!\n");
+                }
+        }
+        if (cChoice == 'N')
+        {
             cImport = 'B';
         }
-    } while (cImport != 'B' && bAskFileName == 0);
-    
+    } while (cChoice != 'N' || cImport != 'B');
 }
 
 /*
@@ -774,20 +788,36 @@ importScores allows the user to import the scores of all the players.
 void importScores(struct playerRecord *A, FILE *fp_input, int n)
 {
     int i;
+    char cChoice;
     char ch;
-
-    fp_input = fopen("score.txt", "r");
-    for (i = 0; i < n; i++)
+    do
     {
-        do 
+        printf("Would you like to import the scores?\n[Y]es\n[N]o\n");
+        do
         {
-            fscanf(fp_input, " %[^\n]s", (A+i)->name);
-            fscanf(fp_input, " %d", (A+i)->score);
-            fscanf(fp_input, " %c", (A+i)->ch);
+            printf("Enter your choice: \n");
+            scanf(" %c", &cChoice);
+            if (cChoice != 'Y' && cChoice != 'N')
+            {
+                printf("Invalid input!\n");
+            }
+        }   while (cChoice != 'Y' && cChoice != 'N');
+        if (cChoice == 'Y') 
+        {
+            fp_input = fopen("score.txt", "r");
+            for (i = 0; i < n; i++)
+            {
+                do 
+                {
+                    fscanf(fp_input, " %[^\n]s", (A+i)->name);
+                    fscanf(fp_input, " %d", (A+i)->score);
+                    fscanf(fp_input, " %c", (A+i)->ch);
 
-        } while (fscanf(fp_input,"%c", &ch) != EOF);
-    }
-    fclose(fp_input);
+                } while (fscanf(fp_input,"%c", &ch) != EOF);
+            }
+            fclose(fp_input);
+        }
+    } while (cChoice != 'N');
 }
 
 /*
