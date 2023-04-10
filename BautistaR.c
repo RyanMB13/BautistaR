@@ -9,6 +9,7 @@ Ryan Matthew Mabanag Bautista, DLSU ID# 12113972
 #include <stdio.h>
 #include <string.h>
 #include <conio.h>
+#include <unistd.h>
 
 #define SIZE 30
 
@@ -489,6 +490,82 @@ void deleteRecord(struct questionRecord *A, int n)
     } while (bDelete != 'N');   
 }
 
+/*
+importRecord allows the user to import records from a file.
+@param questionRecord *A the array of structures that stores the information about the questions.
+@param n the maximum number of array elements
+*/
+void importRecord(struct questionRecord *A, int n)
+{
+    int i;
+    int nCounter;
+    int bFileExists;
+    int bAskFileName;
+    char cChoice;
+    char cImport;
+    String30 *sFileName;
+    FILE *fp;
+    do
+    {
+        printf("Please enter the filename: \n");
+        scanf(" %[^\n]s", &sFileName);
+        if (access(sFileName, F_OK) == 0)
+        {
+            bFileExists = 1; // file exists
+        }
+        else
+        {
+            bFileExists = 0; // file does not exist
+        }
+        if (bFileExists == 0) // file does not exist
+        {
+            printf("The file is not found. Please choose between:\n[1]Try again\n[0]Back to manage data\n");
+            do
+            {
+                printf("Enter your choice: \n");
+                scanf(" %c", &cChoice);
+                if (cChoice != '1' && cChoice != '0')
+                {
+                    printf("Invalid input!\n");
+                }
+            }   while (cChoice != '1' && cChoice != '0'); 
+            if (cChoice == '1')
+            {
+                bAskFileName = 0;
+            }
+            if (cChoice == '0')
+            {
+                bAskFileName = 1;
+                cImport = 'B';
+            }
+        }
+        if (bFileExists == 1) // file exists
+        {
+            fp = fopen(sFileName, "r");
+            for (i = 0; i < n; i++) // checks if there are already records present
+            {
+                if ((A+i)->number >= 1)
+                {
+                    nCounter += 1;
+                }
+            }
+            for (i = nCounter; i < n; i++)
+            {
+                fscanf(fp, " %[^\n]s", (A+i)->topic);
+                fscanf(fp, "%d", &(A+i)->number);
+                fscanf(fp, " %[^\n]s", (A+i)->question);
+                fscanf(fp, " %[^\n]s", (A+i)->choice1);
+                fscanf(fp, " %[^\n]s", (A+i)->choice2);
+                fscanf(fp, " %[^\n]s", (A+i)->choice3);
+                fscanf(fp, " %[^\n]s", (A+i)->answer);
+            }
+            fclose(fp);
+            bAskFileName = 1;
+            cImport = 'B';
+        }
+    } while (cImport != 'B' && bAskFileName == 0);
+    
+}
 
 int main()
 {
@@ -571,7 +648,7 @@ int main()
                         }
                         if (cAdminMode == 'I')
                         {
-                            printf("You chose Import data!\n");
+                            importRecord(questionItems, SIZE);
                         }
                         if (cAdminMode == 'E')
                         {
