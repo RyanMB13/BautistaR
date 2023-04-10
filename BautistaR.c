@@ -228,7 +228,8 @@ void changeRecord(struct questionRecord *A, int n)
     int bCorrectInput;
     int nNumberOfQuestions = 0;
     int nInputNumber;
-    char bDelete;
+    int bValidTopic;
+    char bChange;
     char cChoice;
     String20 sTopic;
     String30 sAnswer, sChoice1, sChoice2, sChoice3;
@@ -239,13 +240,13 @@ void changeRecord(struct questionRecord *A, int n)
         do
         {
             printf("Enter your choice: \n");
-            scanf(" %c", &bDelete);
-            if (bDelete != 'Y' && bDelete != 'N')
+            scanf(" %c", &bChange);
+            if (bChange != 'Y' && bChange != 'N')
             {
                 printf("Invalid input!\n");
             }
-        } while (bDelete != 'Y' && bDelete != 'N');
-        if (bDelete == 'Y')
+        } while (bChange != 'Y' && bChange != 'N');
+        if (bChange == 'Y')
         {
             // prints the topic if the question number is equal to 1
             printf("The topics are: \n");
@@ -256,8 +257,23 @@ void changeRecord(struct questionRecord *A, int n)
                     printf("%s\n", (A+i)->topic);
                 }
             }
-            printf("Please choose a topic to edit.\n");
-            scanf(" %[^\n]s", &sTopic);
+            do // checks if topic is the same as any in array
+            {
+                printf("Please choose a topic to delete.\n");
+                scanf(" %[^\n]s", &sTopic);
+                for (i = 0; i < n; i++)
+                {
+                    if (strcmp(sTopic, (A+i)->topic) != 0)
+                    {
+                        printf("Invalid input.\n");
+                        bValidTopic = 0;
+                    }
+                    if (strcmp(sTopic, (A+i)->topic) == 0)
+                    {
+                        bValidTopic = 1;
+                    }
+                }
+            } while (bValidTopic != 1);
             // prints the question and question number if topic is the same as input
             for (i = 0; i < n; i++)
             {
@@ -282,60 +298,197 @@ void changeRecord(struct questionRecord *A, int n)
                     bCorrectInput = 1;
                 }
             } while (bCorrectInput != 1);
-            printf("Topic: %s\n", (A+nInputNumber)->topic);
-            printf("Question: %s\n", (A+nInputNumber)->question);
-            printf("Choice 1: %s\n", (A+nInputNumber)->choice1);
-            printf("Choice 2: %s\n", (A+nInputNumber)->choice2);
-            printf("Choice 3: %s\n", (A+nInputNumber)->choice3);
-            printf("Answer: %s\n", (A+nInputNumber)->answer);
-            printf("Which field will be changed?\n[T]opic\n[Q]uestion\n[1]Choice 1\n[2]Choice 2\n[3]Choice 3\n[A]nswer\n");
+            for (i = 0; i < n; i++)
             {
-                printf("Enter your choice: \n");
-                scanf(" %c", &cChoice);
-                if (cChoice != 'T' && cChoice != 'Q' && cChoice != '1' && cChoice != '2' && cChoice != '3' && cChoice != 'A')
+                if (strcmp(sTopic, (A+i)->topic == 0) && nInputNumber == (A+i)->number)
+                {
+                    printf("Topic: %s\n", (A+nInputNumber)->topic);
+                    printf("Question: %s\n", (A+nInputNumber)->question);
+                    printf("Choice 1: %s\n", (A+nInputNumber)->choice1);
+                    printf("Choice 2: %s\n", (A+nInputNumber)->choice2);
+                    printf("Choice 3: %s\n", (A+nInputNumber)->choice3);
+                    printf("Answer: %s\n", (A+nInputNumber)->answer);
+                    printf("Which field will be changed?\n[T]opic\n[Q]uestion\n[1]Choice 1\n[2]Choice 2\n[3]Choice 3\n[A]nswer\n");
+                    {
+                        printf("Enter your choice: \n");
+                        scanf(" %c", &cChoice);
+                        if (cChoice != 'T' && cChoice != 'Q' && cChoice != '1' && cChoice != '2' && cChoice != '3' && cChoice != 'A')
+                        {
+                            printf("Invalid input!\n");
+                        }
+                    }   while (cChoice != 'T' && cChoice != 'Q' && cChoice != '1' && cChoice != '2' && cChoice != '3' && cChoice != 'A');
+                    if (cChoice == 'T')
+                    {
+                        printf("Please input a topic: \n");
+                        scanf(" %[^\n]s", &sTopic);
+                        strcpy((A+nInputNumber)->topic, sTopic);
+                    }
+                    if (cChoice == 'Q')
+                    {
+                        printf("Please input a question: \n");
+                        scanf(" %[^\n]s", &sQuestion);
+                        strcpy((A+nInputNumber)->question, sQuestion);
+                    }
+                    if (cChoice == '1')
+                    {
+                        printf("Please input choice 1: \n");
+                        scanf(" %[^\n]s", &sChoice1);
+                        strcpy((A+nInputNumber)->choice1, sChoice1);
+                    }
+                    if (cChoice == '2')
+                    {
+                        printf("Please input a choice 2: \n");
+                        scanf(" %[^\n]s", &sChoice2);
+                        strcpy((A+nInputNumber)->choice2, sChoice2);
+                    }
+                    if (cChoice == '3')
+                    {
+                        printf("Please input a choice 3: \n");
+                        scanf(" %[^\n]s", &sChoice3);
+                        strcpy((A+nInputNumber)->choice3, sChoice3);
+                    }
+                    if (cChoice == 'A')
+                    {
+                        printf("Please input an answer: \n");
+                        scanf(" %[^\n]s", &sAnswer);
+                        strcpy((A+nInputNumber)->answer, sAnswer);
+                    }
+                }
+            }
+        }
+    } while (bChange != 'N');   
+}
+
+/*
+deleteRecord allows the user to delete a record.
+@param questionRecord *A the array of structures that stores the information about the questions.
+@param n the maximum number of array elements
+*/
+void deleteRecord(struct questionRecord *A, int n)
+{
+    int i;
+    int j;
+    int bValidTopic = 0;
+    int bCorrectInput;
+    int nNumberOfQuestions = 0;
+    int nInputNumber;
+    char bDelete;
+    char bConfirm;
+    String20 sTopic;
+    do
+    {
+        printf("Would you like to delete a record?\n[Y]es\n[N]o\n");
+        do
+        {
+            printf("Enter your choice: \n");
+            scanf(" %c", &bDelete);
+            if (bDelete != 'Y' && bDelete != 'N')
+            {
+                printf("Invalid input!\n");
+            }
+        } while (bDelete != 'Y' && bDelete != 'N');
+        if (bDelete == 'Y')
+        {
+            // prints the topic if the question number is equal to 1
+            printf("The topics are: \n");
+            for(i = 0; i < n; i++)
+            {
+                if((A+i)->number == 1)
+                {
+                    printf("%s\n", (A+i)->topic);
+                }
+            }
+            do // checks if topic is the same as any in array
+            {
+                printf("Please choose a topic to delete.\n");
+                scanf(" %[^\n]s", &sTopic);
+                for (i = 0; i < n; i++)
+                {
+                    if (strcmp(sTopic, (A+i)->topic) != 0)
+                    {
+                        printf("Invalid input.\n");
+                        bValidTopic = 0;
+                    }
+                    if (strcmp(sTopic, (A+i)->topic) == 0)
+                    {
+                        bValidTopic = 1;
+                    }
+                }
+            } while (bValidTopic != 1);
+            // prints the question and question number if topic is the same as input
+            for (i = 0; i < n; i++)
+            {
+                if (strcmp(sTopic, (A+i)->topic) == 0)
+                {
+                    printf("Question: %s\n", (A+i)->question);
+                    printf("Question Number: %d\n", (A+i)->number);
+                    nNumberOfQuestions += 1;
+                }
+            }
+            do // loop to check if input is less than or equal to the number of questions under the topic.
+            {
+                printf("Please choose a question number to delete.\n");
+                scanf(" %d", &nInputNumber);
+                if (nInputNumber > nNumberOfQuestions)
                 {
                     printf("Invalid input!\n");
+                    bCorrectInput = 0;
                 }
-            }   while (cChoice != 'T' && cChoice != 'Q' && cChoice != '1' && cChoice != '2' && cChoice != '3' && cChoice != 'A');
-            if (cChoice == 'T')
+                if (nInputNumber <= nNumberOfQuestions)
+                {
+                    bCorrectInput = 1;
+                }
+            } while (bCorrectInput != 1);
+            for (i = 0; i < n; i++)
             {
-                printf("Please input a topic: \n");
-                scanf(" %[^\n]s", &sTopic);
-                strcpy((A+nInputNumber)->topic, sTopic);
-            }
-            if (cChoice == 'Q')
-            {
-                printf("Please input a question: \n");
-                scanf(" %[^\n]s", &sQuestion);
-                strcpy((A+nInputNumber)->question, sQuestion);
-            }
-            if (cChoice == '1')
-            {
-                printf("Please input choice 1: \n");
-                scanf(" %[^\n]s", &sChoice1);
-                strcpy((A+nInputNumber)->choice1, sChoice1);
-            }
-            if (cChoice == '2')
-            {
-                printf("Please input a choice 2: \n");
-                scanf(" %[^\n]s", &sChoice2);
-                strcpy((A+nInputNumber)->choice2, sChoice2);
-            }
-            if (cChoice == '3')
-            {
-                printf("Please input a choice 3: \n");
-                scanf(" %[^\n]s", &sChoice3);
-                strcpy((A+nInputNumber)->choice3, sChoice3);
-            }
-            if (cChoice == 'A')
-            {
-                printf("Please input an answer: \n");
-                scanf(" %[^\n]s", &sAnswer);
-                strcpy((A+nInputNumber)->answer, sAnswer);
+                if (strcmp(sTopic, (A+i)->topic == 0) && nInputNumber == (A+i)->number)
+                {
+                    printf("Topic: %s\n", (A+nInputNumber)->topic);
+                    printf("Question: %s\n", (A+nInputNumber)->question);
+                    printf("Choice 1: %s\n", (A+nInputNumber)->choice1);
+                    printf("Choice 2: %s\n", (A+nInputNumber)->choice2);
+                    printf("Choice 3: %s\n", (A+nInputNumber)->choice3);
+                    printf("Answer: %s\n", (A+nInputNumber)->answer);
+                    // deletion portion of the function
+                    printf("Would you like to delete this record?\n[C]onfirm\n[D]ecline\n");
+                    do
+                    {
+                        printf("Enter your choice: \n");
+                        scanf(" %c", &bConfirm);
+                        if (bConfirm != 'C' && bConfirm != 'D')
+                        {
+                            printf("Invalid input!\n");
+                        }
+                    } while (bConfirm != 'C' && bConfirm != 'D');
+                    if (bConfirm == 'C')
+                    {
+                        for (i = 0; i < n; i++)
+                        {
+                            if (strcmp(sTopic, (A+i)->topic == 0 && nInputNumber == (A+i)->number))
+                            {
+                                for (j = i; j < n; j++)
+                                {
+                                    strcpy((A+j)->topic, (A+j+1)->topic);
+                                    (A+j)->number = (A+j+1)->number;
+                                    strcpy((A+j)->question, (A+j+1)->question);
+                                    strcpy((A+j)->choice1, (A+j+1)->choice1);
+                                    strcpy((A+j)->choice2, (A+j+1)->choice2);
+                                    strcpy((A+j)->choice3, (A+j+1)->choice3);
+                                    strcpy((A+j)->answer, (A+j+1)->answer);
+                                }
+                            }
+                        }
+                    }
+                    if (bConfirm == 'D')
+                    {
+                        bDelete = 'N';
+                    }
+                }
             }
         }
     } while (bDelete != 'N');   
 }
+
 
 int main()
 {
@@ -414,7 +567,7 @@ int main()
                         }
                         if (cAdminMode == 'D')
                         {
-                            printf("You chose Delete a record!\n");
+                            deleteRecord(questionItems, SIZE);
                         }
                         if (cAdminMode == 'I')
                         {
